@@ -41,10 +41,6 @@ public class CustomerControllerTest {
                 .build();
     }
 
-    @After
-    public void tearDown() throws Exception {
-    }
-
     @Test
     public void test_get_all_customers() throws Exception {
         List<Customer> customers = Arrays.asList(
@@ -83,14 +79,14 @@ public class CustomerControllerTest {
         verifyNoMoreInteractions(service);
     }
 
-    @Ignore
+
     @Test
-    public void test_get_by_id_fail_404_not_found() throws Exception {
+    public void test_get_by_id_fail_204_no_content() throws Exception {
 
         when(service.findById(1L)).thenReturn(null);
 
-        mockMvc.perform(get("/customers/{id}", 1))
-                .andExpect(status().isNotFound());
+        mockMvc.perform(get("/customer/{id}", 1L))
+                .andExpect(status().isNoContent());
 
         verify(service, times(1)).findById(1L);
         verifyNoMoreInteractions(service);

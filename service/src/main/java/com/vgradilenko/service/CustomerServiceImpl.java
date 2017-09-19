@@ -46,8 +46,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public boolean deleteById(Long id) {
+    public void deleteById(Long id) {
          repo.delete(id);
-         return true;
     }
 }

@@ -21,29 +21,53 @@ public class CustomerController {
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/customers")
-    public List<Customer> getAll() {
-        return customerService.getAllCustomers();
+    public ResponseEntity<List<Customer>> getAll() {
+        List<Customer> customers = customerService.getAllCustomers();
+
+        if (customers.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+
+        return new ResponseEntity<>(customers, HttpStatus.OK);
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/customer/{id}")
-    public Customer findOne(@PathVariable Long id) {
-        return customerService.findById(id);
+    public ResponseEntity<Customer> findOne(@PathVariable Long id) {
+        Customer customer = customerService.findById(id);
+
+        if (customer == null) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+
+        return new ResponseEntity<>(customer, HttpStatus.OK);
     }
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/customer/new")
     public ResponseEntity<String> create(@RequestBody Customer customer) {
         customerService.createCustomer(customer);
-        return new ResponseEntity<>("Customer saved successfully", HttpStatus.OK);
+        return new ResponseEntity<>("Customer saved successfully", HttpStatus.CREATED);
     }
 
     @PutMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/customer/{id}")
-    public ResponseEntity<String> update(@PathVariable Long id, @RequestBody Customer customer) {
+    public ResponseEntity<Customer> update(@PathVariable Long id, @RequestBody Customer customer) {
+        Customer currentCustomer = customerService.findById(id);
+
+        if (currentCustomer == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
         customerService.edit(id, customer);
-        return new ResponseEntity<>("Customer updated successfully", HttpStatus.OK);
+        return new ResponseEntity<>(currentCustomer, HttpStatus.OK);
     }
 
     @DeleteMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/customer/{id}")
     public ResponseEntity<String> delete(@PathVariable Long id) {
+        Customer customer = customerService.findById(id);
+
+        if (customer == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
         customerService.deleteById(id);
         return new ResponseEntity<>("Customer deleted successfully", HttpStatus.OK);
     }

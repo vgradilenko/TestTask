@@ -13,5 +13,5 @@ public interface CustomerService {
 
     Customer edit(Long id, Customer customer);
 
-    boolean deleteById(Long id);
+    void deleteById(Long id);
 }

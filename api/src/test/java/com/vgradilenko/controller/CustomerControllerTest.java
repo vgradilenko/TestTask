@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vgradilenko.entity.Customer;
 import com.vgradilenko.service.CustomerService;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -92,7 +93,7 @@ public class CustomerControllerTest {
 
     @Test
     public void test_create_new_customer() throws Exception {
-        Customer customer = new Customer(1L, "Bob", "Black", "+380971234567");
+        Customer customer = new Customer(10L, "Bob", "Black", "+380971234567");
 
         mockMvc.perform(
                 post("/customer/new")
@@ -100,7 +101,7 @@ public class CustomerControllerTest {
                         .content(asJsonString(customer)))
                 .andExpect(status().isCreated());
 
-        verify(service, times(1)).createCustomer(customer);
+        verify(service, times(1)).createCustomer(refEq(customer));
         verifyNoMoreInteractions(service);
     }
 

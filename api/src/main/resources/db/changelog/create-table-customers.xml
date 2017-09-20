@@ -7,7 +7,7 @@
 
     <changeSet author="vgradilenko" id="changelog-1.0">
         <createTable tableName="customers">
-            <column name="id" type="int">
+            <column autoIncrement="true" name="id" type="int">
                 <constraints primaryKey="true" nullable="false" />
             </column>
             <column name="name" type="varchar(50)">

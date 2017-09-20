@@ -3,9 +3,7 @@ package com.vgradilenko.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vgradilenko.entity.Customer;
 import com.vgradilenko.service.CustomerService;
-import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -117,7 +115,22 @@ public class CustomerControllerTest {
                 delete("/customer/{id}", customer.getId()))
                 .andExpect(status().isOk());
 
+        verify(service, times(1)).findById(customer.getId());
         verify(service, times(1)).deleteById(customer.getId());
+        verifyNoMoreInteractions(service);
+    }
+
+    @Test
+    public void test_delete_user_fail_404_not_found() throws Exception {
+        Customer customer = new Customer(Long.MAX_VALUE, "Bob", "Black", "+380971234567");
+
+        when(service.findById(customer.getId())).thenReturn(null);
+
+        mockMvc.perform(
+                delete("/customer/{id}", customer.getId()))
+                .andExpect(status().isNotFound());
+
+        verify(service, times(1)).findById(customer.getId());
         verifyNoMoreInteractions(service);
     }
 

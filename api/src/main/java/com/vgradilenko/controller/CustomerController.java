@@ -43,9 +43,9 @@ public class CustomerController {
     }
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/customer/new")
-    public ResponseEntity<String> create(@RequestBody Customer customer) {
+    public ResponseEntity<Customer> create(@RequestBody Customer customer) {
         customerService.createCustomer(customer);
-        return new ResponseEntity<>("Customer saved successfully", HttpStatus.CREATED);
+        return new ResponseEntity<>(customer, HttpStatus.CREATED);
     }
 
     @PutMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/customer/{id}")
